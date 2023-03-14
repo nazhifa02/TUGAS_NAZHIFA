@@ -16,6 +16,7 @@ func getMinMax(numbers ...*int) (min int, max int) {
 			min = *e
 		}
 	}
+
 	return min, max
 }
 func main() {
