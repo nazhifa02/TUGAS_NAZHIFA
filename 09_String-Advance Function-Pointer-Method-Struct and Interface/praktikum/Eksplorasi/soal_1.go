@@ -1,52 +1,51 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
-type student struct {
-	name       string
-	nameEncode string
-	score      int
-}
-
-type Chiper interface {
-	Encode() string
-	Decode() string
-}
-
-func (s *student) Encode() string {
-	var nameEncode = ""
-
-	// A BCDEFGHIJKLMNOPQRSTUVWXYZ
-	// 27
-	// Z YXWVUTSRQPONMLKJIHGFEDCBA
-	// 53
-	s.nameEncode = cipherSubstitute(s.name)
-	return nameEncode
-}
-
-func cipherSubstitute(s string) string {
-	result := []rune{}
-	for _, val := range s {
-		result = append(result, 'z'-((val)-'a'))
-	}
-	return string(result)
+type Student struct {
+	name  string
+	score []int
 }
 
 func main() {
-	var menu int
-	var a student = student{}
-	var c Chiper = &a
+	students := make([]Student, 5)
+	var totalScore, minScore, maxScore int
+	var minStudent, maxStudent Student
 
-	fmt.Print("[1] Encrypt \n[2] Decrypt \nChoose your menu? ")
-	fmt.Scan(&menu)
+	for i := 0; i < 5; i++ {
+		fmt.Printf("Input %d Student's Name: ", i+1)
+		fmt.Scan(&students[i].name)
 
-	if menu == 1 {
-		fmt.Print("\nInput Student Name: ")
-		fmt.Scan(&a.name)
-		fmt.Print("\nEncode of student’s name " + a.name + "is : " + c.Encode())
-	} else if menu == 2 {
-		fmt.Print("\nInput Student Name: ")
-		fmt.Scan(&a.name)
-		fmt.Print("\nDecode of student’s name " + a.name + "is : " + c.Decode())
+		fmt.Printf("Input %d Student's Score: ", i+1)
+		var score int
+		fmt.Scan(&score)
+		students[i].score = append(students[i].score, score)
+		totalScore += score
 	}
+	rataRata := float64(totalScore) / float64(len(students))
+	fmt.Printf("Average score : %.2f\n", rataRata)
+
+	minScore = students[0].score[0]
+	for _, student := range students {
+		for _, score := range student.score {
+			if score < minScore {
+				minScore = score
+				minStudent = student
+			}
+		}
+	}
+	fmt.Printf("Min Score of Students : %s (%d)\n", minStudent.name, minScore)
+
+	maxScore = students[0].score[0]
+	for _, student := range students {
+		for _, score := range student.score {
+			if score > maxScore {
+				maxScore = score
+				maxStudent = student
+			}
+		}
+	}
+	fmt.Printf("Max Score of Students : %s (%d)\n", maxStudent.name, maxScore)
 }
